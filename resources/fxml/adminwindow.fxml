@@ -32,12 +32,12 @@
                     GridPane.columnIndex="0"/>
 
                 <Text styleClass="columnHeader"
-                    text="Account Type"
+                    text="Checking Balance"
                     GridPane.rowIndex="0"
                     GridPane.columnIndex="1"/>
 
                 <Text  styleClass="columnHeader"
-                    text="Balance"
+                    text="Saving Balance"
                     GridPane.rowIndex="0"
                     GridPane.columnIndex="2"/>
 
@@ -67,9 +67,6 @@
             <Label text="Password: "/>
             <TextField  fx:id="newAccountPassword"
                         promptText="Password"/>
-            <Label text="Email: "/>
-            <TextField  fx:id="newAccountEmail"
-                        promptText="Email"/>
             <Label text="Initial Balance: $"/>
             <TextField  fx:id="newAccountInitialBalance"
                         promptText="Amount"/>

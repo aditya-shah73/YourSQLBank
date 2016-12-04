@@ -8,8 +8,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import model.YourSQLBank;
+
+import java.sql.ResultSet;
 
 /**
  * Created by sohamshah on 11/27/16.
@@ -17,8 +21,16 @@ import javafx.stage.Stage;
 public class UserWindowController {
 
     @FXML private StringProperty userName; // stores the name of the admin for the greeting in gui.
+
     @FXML private TextField transactionAmount;
-    @FXML private TextField transactionDescription;
+
+    YourSQLBank yourSqlBankObject = new YourSQLBank("jdbc:mysql://localhost:3306/YourSQLBank_DB", "root", "mysqlrootpassword");
+
+    @FXML private Button depositCheckingButton;
+    @FXML private Button depositSavingButton;
+    @FXML private Button withdrawCheckingButton;
+    @FXML private Button withdrawSavingButton;
+
 
 
     /**
@@ -26,21 +38,36 @@ public class UserWindowController {
      */
     public UserWindowController(){
         userName = new SimpleStringProperty();
-        setUserName("Soham");// Need a method that returns the name of admin as a string from db. which is found by the username entered while logging in.
+        //depositCheckingButton.setDisable(false);
+        try {
+            ResultSet rs = yourSqlBankObject.executeQueryStatement("SELECT * FROM User_TB WHERE USERNAME = '"+LoginLogoutController.username_+"';");
+            while(rs.next()) {
+                System.out.println(rs.getString("USERNAME"));
+            }
+
+        } catch(Exception e) {
+            yourSqlBankObject.handleError(e, "Failed to Execute Query Statement! Check output below:");
+
+        }
+
+        setUserName(LoginLogoutController.username_);// Need a method that returns the name of admin as a string from db. which is found by the username entered while logging in.
         //place the above line in th method that queries the database for the name of the admin by using username and password.
+
     }
 
+
+
     /**
-     * Gets user's name.
-     * @return User's name.
+     * Gets administrator's name.
+     * @return Administrator's name.
      */
     public String getUserName() {
         return userName.get();
     }
 
     /**
-     * To greet user with his/her name, passes the user's name to fxml file.
-     * @return User's name that can be passed to fxml file.
+     * To greet administrator with his/her name, passes the administrator name to fxml file.
+     * @return Administrator's name that can be passed to fxml file.
      */
     public StringProperty userNameProperty() {
         return userName;
@@ -48,27 +75,12 @@ public class UserWindowController {
 
     /**
      * Set's the name of the administrator for throwing it up on gui.
-     * @param user_Name name of the administrator.
+     * @param user_name name of the administrator.
      */
-    public void setUserName(String user_Name){
-        userName.set(user_Name);
+    public void setUserName(String user_name){
+        userName.set(user_name);
     }
 
-    /**
-     * when checking account button is pressed, checking account detail is shown.
-     */
-    public void showCheckingAccount() {
-
-
-    }
-
-    /**
-     * when saving account button is pressed, saving account detail is shown.
-     */
-    public void showSavingAccount() {
-
-
-    }
 
     /**
      * Takes in transaction amount from gui, and converts it to a double value
@@ -77,55 +89,45 @@ public class UserWindowController {
      */
     public double formattedAmount(TextField amount) {
 
-        String amountS = amount.getText();
-        double amountD = Double.parseDouble(amountS);
-        return amountD;
-    }
-
-    /**
-     * Takes in transaction double from gui, and converts it to a string value.
-     * @param description
-     * @return
-     */
-    public String formattedDescription(TextField description) {
-
-        String descriptionS = description.getText();
-        return descriptionS;
+//        String amountS = amount.getText();
+//        double amountD = Double.parseDouble(amountS);
+//        return amountD;
+        return 0;
     }
 
     /**
      * Deposites money in checking account
      */
-    public void depositMoneyInChecking() throws Exception{
+    public void depositMoneyInChecking(ActionEvent actionEvent) throws Exception{
 
-        double tAmount = formattedAmount(this.transactionAmount);
-        String tDescription = formattedDescription(this.transactionDescription);
+     //     double tAmount = formattedAmount(this.transactionAmount);
+        //query that makes transaction type to depositchecking.
 
-        //add a query that deposits tAmount in checking account, and updates balance. and adds tDescription with it.
+        //add a query that deposits tAmount in checking account, and updates balance.
 
     }
 
     public void depositMoneyInSaving() throws Exception{
 
         double tAmount = formattedAmount(this.transactionAmount);
-        String tDescription = formattedDescription(this.transactionDescription);
+        //query that makes transaction type to depositsaving
 
-        //add a query that deposits tAmount in saving account, and updates balance. and adds tDescription with it.
+        //add a query that deposits tAmount in saving account, and updates balance.
 
     }
 
     public void withdrawFromChecking() throws Exception {
 
         double tAmount = formattedAmount(this.transactionAmount);
-        String tDescription = formattedDescription(this.transactionDescription);
+        //query that makes transaction type to withdrawchecking
 
-        //add a query that withdraws tAmount from checking account, and updates balance. and adds tDescription with it.
+        //add a query that withdraws tAmount from checking account, and updates balance.
     }
 
     public void withdrawFromSaving() throws Exception {
 
         double tAmount = formattedAmount(this.transactionAmount);
-        String tDescription = formattedDescription(this.transactionDescription);
+        //query that makes transaction type to withdrawsaving.
 
         //add a query that withdraws tAmount from saving account, and updates balance. and adds tDescription with it.
 

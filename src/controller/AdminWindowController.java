@@ -13,35 +13,27 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-/**
- * Created by sohamshah on 11/28/16.
- */
 public class AdminWindowController {
-
     @FXML private StringProperty adminName; // stores the name of the admin for the greeting in gui.
 
     @FXML private TextField newAccountFirstName; //Stores input from GUI
     @FXML private TextField newAccountLastName; //Stores input from GUI
     @FXML private TextField newAccountUsername; //Stores input from GUI
     @FXML private TextField newAccountPassword; //Stores input from GUI
-    @FXML private TextField newAccountEmail; //Stores input from GUI
     @FXML private TextField newAccountInitialBalance; //Stores input from GUI
 
     private String newFirstName; //holds first name for new account
     private String newLastName; //holds last name for new account
     private String newUsername; //holds username for new account
     private String newPassword; //holds password for new account
-    private String newEmail; //holds email for new account
     private double newBalance; //holds  balance for new account
-
-
 
     /**
      * Constructor for AdminWindowController.
      */
-    public AdminWindowController(){
+    public AdminWindowController() {
         adminName = new SimpleStringProperty();
-        setAdminName("Soham");// Need a method that returns the name of admin as a string from db. which is found by the username entered while logging in.
+        setAdminName(LoginLogoutController.username_);// Need a method that returns the name of admin as a string from db. which is found by the username entered while logging in.
         //place the above line in th method that queries the database for the name of the admin by using username and password.
     }
 
@@ -75,20 +67,18 @@ public class AdminWindowController {
      * and after correcting the formats, stored in the global variables, which are ready to be placed in the db.
      * @throws Exception
      */
-    public void createAccount()throws Exception {
+    public void createAccount(ActionEvent actionEvent)throws Exception {
 
         this.newFirstName = newAccountFirstName.getText();
         this.newLastName = newAccountLastName.getText();
         this.newUsername = newAccountUsername.getText();
         this.newPassword = newAccountPassword.getText();
-        this.newEmail = newAccountEmail.getText();
         this.newBalance = Double.parseDouble(newAccountInitialBalance.getText());
 
         createAccountInDB(  this.newFirstName,
                             this.newLastName,
                             this.newUsername,
                             this.newPassword,
-                            this.newEmail,
                             this.newBalance);
     }
 
@@ -98,10 +88,9 @@ public class AdminWindowController {
      * @param lName last name
      * @param uName username
      * @param pWord password
-     * @param eMail email address
      * @param balanceAmount initial balance.
      */
-    public void createAccountInDB(String fName, String lName, String uName, String pWord, String eMail, double balanceAmount) {
+    public void createAccountInDB(String fName, String lName, String uName, String pWord, double balanceAmount) {
 
 
     }

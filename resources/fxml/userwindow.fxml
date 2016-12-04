@@ -17,60 +17,48 @@
           text="YourSQL Bank"/>
     <HBox fx:id="greeting">
         <Text styleClass="userinfo"
-              text="Hello,  "/>
-        <Text text="${controller.userName}"/>
+              text="Hello, "/>
+
+        <Text styleClass="userinfo"
+              text="${controller.userName}"/>
     </HBox>
 
     <VBox>
         <HBox>
             <TextField  promptText="transactionAmount"
                         fx:id="amountDeposite"/>
-            <TextField  promptText="Description"
-                        fx:id="descriptionDeposite"/>
-            <Button text="Deposite Checking Account"
-                    onAction="#depositMoneyInChecking"/>
-            <Button text="Deposite Saving Account"
-                    onAction="#depositMoneyInSaving"/>
+            <Button text="Deposit Checking Account"
+                    onAction="#depositMoneyInChecking"
+                    fx:id="depositCheckingButton"
+                    disable="true"/>
+            <Button text="Deposit Saving Account"
+                    onAction="#depositMoneyInSaving"
+                    fx:id="depositWithdrawButton"/>
         </HBox>
         <HBox>
             <TextField  promptText="Amount"/>
-            <TextField  promptText="Description"/>
             <Button text="Withdraw Checking Account"
-                    onAction="#withdrawFromChecking"/>
+                    onAction="#withdrawFromChecking"
+                    fx:id="withdrawCheckingButton"/>
             <Button text="Withdraw Saving Account"
-                    onAction="#withdrawFromSaving"/>
+                    onAction="#withdrawFromSaving"
+                    fx:id="withdrawSavingButton"/>
         </HBox>
     </VBox>
-
-    <HBox   fx:id="accountSelectButtons">
-        <Button text="Checking Acc."
-                onAction="#showCheckingAccount"/>
-        <Button text="Saving Acc."
-                onAction="#showSavingAccount"/>
-    </HBox>
 
     <GridPane   fx:id="userTableHeader"
                 hgap="10"
                 vgap="10">
+
         <Text  styleClass="columnHeader"
-                    text="Date"
+                    text="Transaction Type"
                     GridPane.rowIndex="0"
                     GridPane.columnIndex="0"/>
 
         <Text  styleClass="columnHeader"
-                    text="Transaction Description"
+                    text="Amount"
                     GridPane.rowIndex="0"
                     GridPane.columnIndex="1"/>
-
-        <Text  styleClass="columnHeader"
-                    text="Withdrawal"
-                    GridPane.rowIndex="0"
-                    GridPane.columnIndex="2"/>
-
-        <Text  styleClass="columnHeader"
-                    text="Deposit"
-                    GridPane.rowIndex="0"
-                    GridPane.columnIndex="3"/>
     </GridPane>
 
     <GridPane   fx:id="userTableData"
