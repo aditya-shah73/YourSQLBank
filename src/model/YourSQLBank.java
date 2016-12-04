@@ -19,8 +19,8 @@ public class YourSQLBank {
         // executeUpdateStatement("INSERT INTO t_customer VALUES (4, 1, 'duttaoindril@gmail.com', 'Oindril', 'Dutta', 'duttaoindril', 'odutta', 1, '2016-11-30 18:55:50', null)");
 
         //Testing Admin Level Table Calls
-        print("SELECT * FROM User_TB join Account_TB ON User_TB.USER_ID = Account_TB.USER_ID;");
-        print("SELECT * FROM User_TB JOIN Account_TB ON User_TB.USER_ID = Account_TB.USER_ID JOIN History_TB ON User_TB.USER_ID = History_TB.USER_ID;");
+        print("SELECT * FROM User_TB join Account_TB ON User_TB.USERNAME = Account_TB.USERNAME;");
+        print("SELECT * FROM User_TB JOIN Account_TB ON User_TB.USERNAME = Account_TB.USERNAME JOIN History_TB ON User_TB.USERNAME = History_TB.USERNAME;");
         print(getAdminPanelUserInfoTable());
         print(getAdminPanelTransactionHistoryTable());
         //Testing User Login Row Calls
@@ -35,6 +35,29 @@ public class YourSQLBank {
         print(getUserTransactionHistoryTable("groot"));
         print(getUserTransactionHistoryTable("soham"));
         print(getUserTransactionHistoryTable("FAIL"));
+
+        print("SELECT * FROM User_TB JOIN Account_TB ON User_TB.USERNAME = Account_TB.USERNAME JOIN History_TB ON User_TB.USERNAME = History_TB.USERNAME;");
+        print("SELECT * FROM User_TB JOIN Account_TB_Archive ON User_TB.USERNAME = Account_TB_Archive.USERNAME JOIN History_TB_Archive ON User_TB.USERNAME = History_TB_Archive.USERNAME;");
+        closeAccount("groot");
+        print("SELECT * FROM User_TB JOIN Account_TB ON User_TB.USERNAME = Account_TB.USERNAME JOIN History_TB ON User_TB.USERNAME = History_TB.USERNAME;");
+        print("SELECT * FROM User_TB JOIN Account_TB_Archive ON User_TB.USERNAME = Account_TB_Archive.USERNAME JOIN History_TB_Archive ON User_TB.USERNAME = History_TB_Archive.USERNAME;");
+
+
+        //Testing User Transaction History Insertion
+        // print(getAdminPanelTransactionHistoryTable());
+        // AddTransaction("groot", "WTDW", 0, "CHKG");
+        // AddTransaction("groot", "DPST", 0, "SVNG");
+        // AddTransaction("soham", "WTDW", 0, "CHKG");
+        // AddTransaction("soham", "DPST", 0, "SVNG");
+        // AddTransaction("FAIL", "WTDW", 0, "CHKG");
+        // AddTransaction("FAIL", "DPST", 0, "SVNG");
+        // print(getAdminPanelTransactionHistoryTable());
+
+        //Testing User Insertion
+        // print("SELECT * FROM User_TB join Account_TB ON User_TB.USERNAME = Account_TB.USERNAME;");
+        // signUp("oindril", true, "Oindril", "Dutta", "odutta", 50, 100);
+        // signUp("aditya", false, "Aditya", "Shah", "apass", 150, 0);
+        // print("SELECT * FROM User_TB join Account_TB ON User_TB.USERNAME = Account_TB.USERNAME;");
     }
 
     // ==== MySQL JDBC General Handler Code ====
@@ -110,22 +133,81 @@ public class YourSQLBank {
         return rs.get(0);
     }
 
-    public List<String[]> convertRStoArray(ResultSet rs) {
-        int nCol = rs.getMetaData().getColumnCount();
-        List<String[]> table = new ArrayList<>();
-        while(rs.next()) {
-            String[] row = new String[nCol];
-            for(int iCol = 1; iCol <= nCol; iCol++){
-                Object obj = rs.getObject( iCol );
-                row[iCol-1] = (obj == null)? null : obj.toString();
+    // ==== YourSQLBank Specific JDBC Query Methods ====
+    public List<String[]> getAdminPanelUserInfoTable() { // Union in Archived Table Version
+        return getTable("Admin Panel User Info Table", "USERNAME,CHECKING_BALANCE,SAVING_BALANCE", "SELECT User_TB.USERNAME, CHECKINGACC.BALANCE AS CHECKING_BALANCE, SAVINGACC.BALANCE AS SAVING_BALANCE FROM User_TB JOIN Account_TB AS CHECKINGACC ON User_TB.USERNAME = CHECKINGACC.USERNAME AND CHECKINGACC.ACC_TYPE = 'CHKG' JOIN Account_TB AS SAVINGACC ON User_TB.USERNAME = SAVINGACC.USERNAME AND SAVINGACC.ACC_TYPE = 'SVNG';", "Failed to Get Admin Panel User Info Table Data");
+    }
+
+    public List<String[]> getAdminPanelTransactionHistoryTable() { // Union in Archived Table Version
+        return getTable("Admin Panel Transaction History Table", "TRSN_ID,ACC_ID,ACC_TYPE,TRSN_AMT,TRSN_TYPE", "SELECT TRSN_ID, Account_TB.ACC_ID, ACC_TYPE, TRSN_AMT, TRSN_TYPE FROM Account_TB JOIN History_TB ON Account_TB.USERNAME = History_TB.USERNAME AND Account_TB.ACC_ID = History_TB.ACC_ID;", "Failed to Get Admin Panel User Info Table Data");
+    }
+
+    public List<String[]> getUserTransactionHistoryTable(String username) { // Union in Archived Table Version
+        return getTable("User "+username+"'s Transaction History", "TRSN_ID,ACC_ID,ACC_TYPE,TRSN_AMT,TRSN_TYPE", "SELECT TRSN_ID, Account_TB.ACC_ID, ACC_TYPE, TRSN_AMT, TRSN_TYPE FROM Account_TB JOIN History_TB ON Account_TB.USERNAME = History_TB.USERNAME AND Account_TB.ACC_ID = History_TB.ACC_ID JOIN User_TB ON User_TB.USERNAME = Account_TB.USERNAME WHERE User_TB.USERNAME = '"+username+"';", "Failed to Get User Transaction History Table Data");
+    }
+
+    public String[] login(String username, String pass) {
+        return getRow("logging in as "+username+" with pass "+pass, "USERNAME,CHECKING_ACC_ID,SAVING_ACC_ID,ADMIN,ACTIVE,F_NAME,L_NAME,PASS,CREATED_ON", "SELECT * FROM User_TB where User_TB.USERNAME = '"+username+"' and User_TB.PASS = '"+pass+"';", "Unable to verify Login details");
+    }
+
+    public String[] getInfo(String username) { // Union in Archived Table Version
+        return getRow("getting user "+username+" info", "USERNAME,F_NAME,L_NAME,ADMIN,ACTIVE,CHECKING_BALANCE,SAVING_BALANCE,PASS,CREATED_ON", "SELECT User_TB.USERNAME, F_NAME, L_NAME, ADMIN, ACTIVE, CHECKINGACC.BALANCE AS CHECKING_BALANCE, SAVINGACC.BALANCE AS SAVING_BALANCE, PASS, CREATED_ON FROM User_TB JOIN Account_TB AS CHECKINGACC ON User_TB.USERNAME = CHECKINGACC.USERNAME AND CHECKINGACC.ACC_TYPE = 'CHKG' JOIN Account_TB AS SAVINGACC ON User_TB.USERNAME = SAVINGACC.USERNAME AND SAVINGACC.ACC_TYPE = 'SVNG' WHERE User_TB.USERNAME = '"+username+"'", "Unable to get User Information");
+    }
+
+    // ==== YourSQLBank Specific JDBC Update Methods ====
+    public void AddTransaction(String username, String trsn_type, double amt, int acc_id) {
+        //trsn_type can be WTDW for Withdraw and DPST for Deposit
+        executeUpdateStatement("INSERT INTO History_TB (TRSN_TYPE, TRSN_AMT, USERNAME, ACC_ID) VALUES ('"+trsn_type+"', "+amt+", '"+username+"', "+acc_id+")", "");
+    }
+
+    public void AddTransaction(String username, String trsn_type, double amt, String acc_type) {
+        //acc_type can be CHKG for Checking Account and SVNG for Saving Account
+        String[] acc_id = getRow("getting acc_id from acc_type", "ACC_ID", "SELECT ACC_ID FROM account_tb WHERE ACC_TYPE = '"+acc_type+"' AND USERNAME = '"+username+"';", "Could not get ACC_ID from ACC_TYPE");
+        if(acc_id != null)
+            AddTransaction(username, trsn_type, amt, Integer.parseInt(acc_id[0]));
+            //System.out.println(Integer.parseInt(acc_id[0]) + "\n");
+    }
+
+    public void signUp(String username, boolean admin, String fName, String lName, String pass, double checkingBalance, double savingBalance) {
+        String error = "Failed in adding user "+username;
+        executeUpdateStatement("INSERT INTO Account_TB (USERNAME, ACC_TYPE, BALANCE) values ('"+username+"', 'CHKG', "+checkingBalance+");", error);
+        executeUpdateStatement("INSERT INTO Account_TB (USERNAME, ACC_TYPE, BALANCE) values ('"+username+"', 'SVNG', "+savingBalance+");", error);
+
+        String[] acc_ids = getRow("getting acc_ids for user "+username+" insertion", "ACC_ID_A,ACC_ID_B", "SELECT acca.ACC_ID as ACC_ID_A, accb.ACC_ID as ACC_ID_B FROM Account_TB AS acca JOIN Account_TB AS accb WHERE acca.USERNAME = '"+username+"' AND accb.USERNAME = '"+username+"' AND acca.ACC_TYPE = 'CHKG' AND accb.ACC_TYPE = 'SVNG';", "This should not be happening. Could not get ACC_IDs from Account_TB for user insertion");
+
+        executeUpdateStatement("INSERT INTO User_TB (USERNAME, CHECKING_ACC_ID, SAVING_ACC_ID, ADMIN, ACTIVE, F_NAME, L_NAME, PASS) values ('"+username+"', "+acc_ids[0]+", "+acc_ids[1]+", "+Boolean.toString(admin).toUpperCase()+", TRUE, '"+fName+"', '"+lName+"', '"+pass+"');", error);
+    }
+
+    public void signUp(String username, boolean admin, String fName, String lName, String pass, double balance) {
+        signUp(username, admin, fName, lName, pass, balance, balance);
+    }
+
+    public void closeAccount(String username) {
+        executeUpdateStatement("UPDATE User_TB SET ACTIVE = FALSE WHERE USERNAME = '"+username+"';", "Failed to close "+username+"'s' account'");
+    }
+
+    // ==== General Static Handler Code ====
+    public static List<String[]> convertRStoArray(ResultSet rs) {
+        try {
+            int nCol = rs.getMetaData().getColumnCount();
+            List<String[]> table = new ArrayList<>();
+            while(rs.next()) {
+                String[] row = new String[nCol];
+                for(int iCol = 1; iCol <= nCol; iCol++){
+                    Object obj = rs.getObject( iCol );
+                    row[iCol-1] = (obj == null)? null : obj.toString();
+                }
+                table.add(row);
             }
-            table.add(row);
+            return table;
+        } catch(Exception e) {
+            handleError(e, "Failed to Convert RS to Array! Check output below:");
+            return null;
         }
-        return table;
     }
 
     public void print(String command) {
-        print(executeQueryStatement(command));
+        print(executeQueryStatement(command, "Cannot print command"));
     }
 
     public void print(ResultSet rs) {
@@ -133,7 +215,7 @@ public class YourSQLBank {
             print(convertRStoArray(rs));
     }
 
-    public void print(String[] lst) {
+    public static void print(String[] lst) {
         if(lst == null || lst.length < 1)
             return;
         for(String s:lst)
@@ -141,7 +223,7 @@ public class YourSQLBank {
         System.out.println("\n");
     }
 
-    public void print(List<String[]> rs) {
+    public static void print(List<String[]> rs) {
         if(rs == null || rs.isEmpty())
             return;
         for(String[] row:rs) {
@@ -158,66 +240,4 @@ public class YourSQLBank {
         e.printStackTrace();
         System.out.println();
     }
-
-    // ==== YourSQLBank Specific JDBC Query Methods ====
-    public List<String[]> getAdminPanelUserInfoTable() {
-        return getTable("Admin Panel User Info Table", "USERNAME,CHECKING_BALANCE,SAVING_BALANCE", "SELECT USERNAME, CHECKINGACC.BALANCE AS CHECKING_BALANCE, SAVINGACC.BALANCE AS SAVING_BALANCE FROM User_TB JOIN Account_TB AS CHECKINGACC ON User_TB.USER_ID = CHECKINGACC.USER_ID AND CHECKINGACC.ACC_TYPE = 'CHKN' JOIN Account_TB AS SAVINGACC ON User_TB.USER_ID = SAVINGACC.USER_ID AND SAVINGACC.ACC_TYPE = 'SVNG'", "Failed to Get Admin Panel User Info Table Data");
-    }
-
-    public List<String[]> getAdminPanelTransactionHistoryTable() {
-        return getTable("Admin Panel Transaction History Table", "TRSN_ID,ACC_ID,ACC_TYPE,TRSN_AMT,TRSN_TYPE", "SELECT TRSN_ID, account_tb.ACC_ID, ACC_TYPE, TRSN_AMT, TRSN_TYPE FROM account_tb JOIN history_tb ON account_tb.USER_ID = history_tb.USER_ID AND account_tb.ACC_ID = history_tb.ACC_ID;", "Failed to Get Admin Panel User Info Table Data");
-    }
-
-    public List<String[]> getUserTransactionHistoryTable(String username) {
-        return getTable("User "+username+"'s Transaction History", "TRSN_ID,ACC_ID,ACC_TYPE,TRSN_AMT,TRSN_TYPE", "SELECT TRSN_ID, account_tb.ACC_ID, ACC_TYPE, TRSN_AMT, TRSN_TYPE FROM account_tb JOIN history_tb ON account_tb.USER_ID = history_tb.USER_ID AND account_tb.ACC_ID = history_tb.ACC_ID JOIN user_tb ON user_tb.USER_ID = account_tb.USER_ID WHERE user_tb.USERNAME = '"+username+"';", "Failed to Get User Transaction History Table Data");
-    }
-
-    public String[] login(String username, String pass) {
-        return getRow("logging in as "+username+" with pass "+pass, "USER_ID,USERNAME,CHECKING_ACC_ID,SAVING_ACC_ID,ADMIN,ACTIVE,F_NAME,L_NAME,PASS,CREATED_ON", "SELECT * FROM User_TB where User_TB.USERNAME = '"+username+"' and User_TB.PASS = '"+pass+"';", "Unable to verify Login details");
-    }
-
-    public String[] getInfo(String username) {
-        return getRow("getting user "+username+" info", "USERNAME,F_NAME,L_NAME,ADMIN,ACTIVE,CHECKING_BALANCE,SAVING_BALANCE,PASS,CREATED_ON", "SELECT USERNAME, F_NAME, L_NAME, ADMIN, ACTIVE, CHECKINGACC.BALANCE AS CHECKING_BALANCE, SAVINGACC.BALANCE AS SAVING_BALANCE, PASS, CREATED_ON FROM User_TB JOIN Account_TB AS CHECKINGACC ON User_TB.USER_ID = CHECKINGACC.USER_ID AND CHECKINGACC.ACC_TYPE = 'CHKN' JOIN Account_TB AS SAVINGACC ON User_TB.USER_ID = SAVINGACC.USER_ID AND SAVINGACC.ACC_TYPE = 'SVNG' WHERE USERNAME = '"+username+"'", "Unable to get User Information");
-    }
-
-    //Try to remember what this was for?
-    public String[] getAccountInfo() {
-        return null;
-    }
-
-    // ==== YourSQLBank Specific JDBC Query Methods ====
-    public void AddTransaction() {
-        //executeUpdateStatement("INSERT INTO history_tb (TRSN_TYPE, TRSN_AMT, USER_ID, ACC_ID) VALUES ('WDRW', 10, 1, 1)");
-    }
-
-    public void closeAccount() {
-
-    }
-
-    public void signUp() {
-
-    }
-
-//         INSERT INTO Account_TB (USER_ID, ACC_TYPE, BALANCE) values (0, "CHKN", 100);
-// INSERT INTO Account_TB (USER_ID, ACC_TYPE, BALANCE) values (0, "SVNG", 200);
-// INSERT INTO User_TB
-//     (USERNAME, CHECKING_ACC_ID, SAVING_ACC_ID, ADMIN, ACTIVE, EMAIL, F_NAME, L_NAME, PASS, PIN, CREATED_ON, LAST_LOGIN_DATE) values
-//     ("aditya", 1, 2, FALSE, TRUE, "aditya7395@gmail.com", "Aditya", "Shah", "1234", "4321", "9999-12-31 23:59:59", "9999-12-31 23:59:59");
-//     }
-
-// INSERT INTO Account_TB (USER_ID, ACC_TYPE, BALANCE) values (1, "CHKN", 100);
-// INSERT INTO Account_TB (USER_ID, ACC_TYPE, BALANCE) values (1, "SVNG", 100);
-// INSERT INTO User_TB
-//     (USERNAME, CHECKING_ACC_ID, SAVING_ACC_ID, ADMIN, ACTIVE, F_NAME, L_NAME, PASS) values
-//     ("groot", 1, 2, TRUE, TRUE, "I AM", "GROOT", "groot");
-
-// INSERT INTO Account_TB (USER_ID, ACC_TYPE, BALANCE) values (2, "CHKN", 100);
-// INSERT INTO Account_TB (USER_ID, ACC_TYPE, BALANCE) values (2, "SVNG", 100);
-// INSERT INTO User_TB
-//     (USERNAME, CHECKING_ACC_ID, SAVING_ACC_ID, ADMIN, ACTIVE, F_NAME, L_NAME, PASS) values
-//     ("soham", 3, 4, FALSE, TRUE, "Soham", "Shah", "pass");
-
-// SELECT * FROM User_TB join Account_TB ON User_TB.USER_ID = Account_TB.USER_ID;
-
-
 }
