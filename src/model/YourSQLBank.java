@@ -4,12 +4,29 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
-/**
- * Created by sohamshah on 12/3/16.
- */
-public class YourSQLBank {
 
+//RUN IN CMD WITH: cls && javac YourSQLBank.java && java -cp mysql-connector-java-5.1.40-bin.jar;. YourSQLBank
+
+public class YourSQLBank {
     Connection connection;
+
+    // ==== YourSQLBank Testing Code ====
+    public static void main(String[] argv) {
+        YourSQLBank bankDB = new YourSQLBank("jdbc:mysql://localhost:3306/Bank", "root", "root");
+        bankDB.test();
+    }
+
+    public void test() {try {
+            executeUpdateStatement("INSERT INTO t_customer VALUES (4, 1, 'duttaoindril@gmail.com', 'Oindril', 'Dutta', 'duttaoindril', 'odutta', 1, '2016-11-30 18:55:50', null)");
+            ResultSet rs = executeQueryStatement("SELECT * FROM t_customer;");
+            while(rs.next()) {
+                System.out.println(rs.getString("USERNAME"));
+                System.out.println(rs.getString("PASS"));
+            }
+        } catch(Exception e) {
+            handleError(e, "Failed testing... Check output below:");
+        }
+    }
 
     // ==== YourSQLBank MySQL JDBC Handler Code ====
     public YourSQLBank(String url, String user, String pass) {
