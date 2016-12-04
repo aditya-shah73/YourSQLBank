@@ -12,7 +12,7 @@ public class YourSQLBank {
 
     // ==== YourSQLBank Testing Code ====
     public static void main(String[] argv) {
-        YourSQLBank bankDB = new YourSQLBank("jdbc:mysql://localhost:3306/Bank", "root", "root");
+        YourSQLBank bankDB = new YourSQLBank("jdbc:mysql://localhost:3306/Bank", "root", "mysqlrootpassword");
         bankDB.test();
     }
 
