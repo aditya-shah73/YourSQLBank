@@ -8,45 +8,80 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.TextField?>
 
+<?import javafx.scene.layout.BorderPane?>
 <VBox fx:controller="controller.AdminWindowController"
       xmlns:fx="http://javafx.com/fxml">
     <!-- path of the file that has controller logic for this fxml goes in the fx:controller="path" in above tag.-->
 
     <Text fx:id="title"
           text="YourSQL Bank"/>
+    <HBox fx:id="greeting">
+        <Text text="Hello, "/>
 
-    <Text styleClass="userinfo"
-          text="Hello,  "/>
-
-    <GridPane fx:id="transactiontable">
-        <TextField  styleClass="columnheader"
+        <Text styleClass="userinfo"
+              text="${controller.adminName}"/>
+    </HBox>
+    <HBox>
+        <VBox>
+            <GridPane   fx:id="adminTableHeader"
+                    hgap="20"
+                    vgap="20">
+                <Text  styleClass="columnHeader"
                     text="username"
                     GridPane.rowIndex="0"
                     GridPane.columnIndex="0"/>
 
-        <TextField  styleClass="columnheader"
+                <Text styleClass="columnHeader"
                     text="Account Type"
                     GridPane.rowIndex="0"
                     GridPane.columnIndex="1"/>
 
-        <TextField  styleClass="columnheader"
+                <Text  styleClass="columnHeader"
                     text="Balance"
                     GridPane.rowIndex="0"
                     GridPane.columnIndex="2"/>
 
-        <TextField  styleClass="columnheader"
-                    text="Archive?"
+                <Text  styleClass="columnHeader"
+                    text="Close Account"
                     GridPane.rowIndex="0"
                     GridPane.columnIndex="3"/>
+            </GridPane>
 
-        <TextField  styleClass="columnheader"
-                    text="Close?"
-                    GridPane.rowIndex="0"
-                    GridPane.columnIndex="4"/>
+            <GridPane fx:id="adminTableData">
 
-    </GridPane>
+            </GridPane>
+        </VBox>
+        <VBox   fx:id="createNewAccountPanel"
+                alignment="CENTER_RIGHT">
+            <Text   text="Create Account"/>
+
+            <Label text="First Name: "/>
+            <TextField  fx:id="newAccountFirstName"
+                        promptText="First Name"/>
+            <Label text="Last Name: "/>
+            <TextField  fx:id="newAccountLastName"
+                        promptText="Last Name"/>
+            <Label text="Username: "/>
+            <TextField  fx:id="newAccountUsername"
+                        promptText="Username"/>
+            <Label text="Password: "/>
+            <TextField  fx:id="newAccountPassword"
+                        promptText="Password"/>
+            <Label text="Email: "/>
+            <TextField  fx:id="newAccountEmail"
+                        promptText="Email"/>
+            <Label text="Initial Balance: $"/>
+            <TextField  fx:id="newAccountInitialBalance"
+                        promptText="Amount"/>
+            <Button text="Create Account"
+                    onAction="#createAccount"
+                    GridPane.columnIndex="0"
+                    GridPane.rowIndex="2"/>
+        </VBox>
+    </HBox>
 
     <Button text="Log Out"
-            onAction="#logOutAdmin"
+            onAction="#showLogOutAdminWindow"
             fx:id="loginbutton"/>
+
 </VBox>

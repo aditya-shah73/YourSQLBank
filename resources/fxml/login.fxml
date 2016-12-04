@@ -6,6 +6,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.control.PasswordField?>
 <VBox fx:controller="controller.LoginLogoutController"
       xmlns:fx="http://javafx.com/fxml">
     <!-- path of the file that has controller logic for this fxml goes in the fx:controller="path" in above tag.-->
@@ -22,7 +23,8 @@
                GridPane.rowIndex="0"
                GridPane.halignment="RIGHT"
                styleClass="loginlabel"/>
-        <TextField fx:id="username"
+        <TextField fx:id="loginUsername"
+                   promptText="Username"
                    GridPane.columnIndex="1"
                    GridPane.rowIndex="0"
                    GridPane.halignment="LEFT"/>
@@ -31,7 +33,8 @@
                GridPane.rowIndex="1"
                GridPane.halignment="RIGHT"
                styleClass="loginlabel"/>
-        <TextField fx:id="password"
+        <PasswordField fx:id="loginPassword"
+                   promptText="Password"
                    GridPane.columnIndex="1"
                    GridPane.rowIndex="1"
                    GridPane.halignment="LEFT"/>
@@ -39,10 +42,10 @@
     </GridPane>
 
     <Button text="Log In"
-            onAction="#checkUserInDb"
+            onAction="#showLoggedInWindow"
             fx:id="loginbutton"/>
         <!--The method that should handle loggin in should be placed in the LoginLogoutController class, and the method should be placed
-            in the above onAction attribute, followed by # (replace method dosomething()) -->
+            in the above onAction attribute, followed by # (replace method dummyLoginMethod()) -->
 </VBox>
 
 <!--alignment="center" hgap="10" vgap="10" attributes in gridpane that control gap between cells.-->

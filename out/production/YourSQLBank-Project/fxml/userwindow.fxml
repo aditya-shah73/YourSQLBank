@@ -15,40 +15,72 @@
 
     <Text fx:id="title"
           text="YourSQL Bank"/>
+    <HBox fx:id="greeting">
+        <Text styleClass="userinfo"
+              text="Hello,  "/>
+        <Text text="${controller.userName}"/>
+    </HBox>
 
-    <Text styleClass="userinfo"
-          text="Hello,  "/>
+    <VBox>
+        <HBox>
+            <TextField  promptText="transactionAmount"
+                        fx:id="amountDeposite"/>
+            <TextField  promptText="Description"
+                        fx:id="descriptionDeposite"/>
+            <Button text="Deposite Checking Account"
+                    onAction="#depositMoneyInChecking"/>
+            <Button text="Deposite Saving Account"
+                    onAction="#depositMoneyInSaving"/>
+        </HBox>
+        <HBox>
+            <TextField  promptText="Amount"/>
+            <TextField  promptText="Description"/>
+            <Button text="Withdraw Checking Account"
+                    onAction="#withdrawFromChecking"/>
+            <Button text="Withdraw Saving Account"
+                    onAction="#withdrawFromSaving"/>
+        </HBox>
+    </VBox>
 
-    <HBox   fx:id="transactionButtons">
+    <HBox   fx:id="accountSelectButtons">
         <Button text="Checking Acc."
                 onAction="#showCheckingAccount"/>
         <Button text="Saving Acc."
                 onAction="#showSavingAccount"/>
     </HBox>
 
-    <GridPane fx:id="transactiontable">
-        <TextField  styleClass="columnheader"
+    <GridPane   fx:id="userTableHeader"
+                hgap="10"
+                vgap="10">
+        <Text  styleClass="columnHeader"
                     text="Date"
                     GridPane.rowIndex="0"
                     GridPane.columnIndex="0"/>
 
-        <TextField  styleClass="columnheader"
+        <Text  styleClass="columnHeader"
                     text="Transaction Description"
                     GridPane.rowIndex="0"
                     GridPane.columnIndex="1"/>
 
-        <TextField  styleClass="columnheader"
+        <Text  styleClass="columnHeader"
                     text="Withdrawal"
                     GridPane.rowIndex="0"
                     GridPane.columnIndex="2"/>
 
-        <TextField  styleClass="columnheader"
+        <Text  styleClass="columnHeader"
                     text="Deposit"
                     GridPane.rowIndex="0"
                     GridPane.columnIndex="3"/>
     </GridPane>
 
+    <GridPane   fx:id="userTableData"
+                hgap="10"
+                vgap="10">
+
+
+    </GridPane>
+
     <Button text="Log Out"
-            onAction="#logOutUser"
-            fx:id="loginbutton"/>
+            onAction="#showLogOutUserWindow"
+            fx:id="logOutButton"/>
 </VBox>
