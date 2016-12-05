@@ -25,11 +25,10 @@ public class SignUpController {
     public void signUpAccount(ActionEvent actionEvent) throws Exception {
         LoginLogoutController.username_ = newAccountUsername.getText();
         db.signUp(newAccountUsername.getText(), false, newAccountFirstName.getText(), newAccountLastName.getText(), newAccountPassword.getText(), 0.0);
-        Parent pageParent = FXMLLoader.load(getClass().getResource("/fxml/userwindow.fxml")); // admin
+        Parent pageParent = FXMLLoader.load(getClass().getResource("/fxml/userwindow.fxml"));
         Scene pageScene = new Scene(pageParent, 1000, 800);
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         stage.setScene(pageScene);
         stage.show();
-
     }
 }

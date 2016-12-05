@@ -1,0 +1,3 @@
+INFO	?	main	2016-12-05T13:50:27.578Z	org.javacs.Main#connectToNode	Connected to parent using socket on port 55282
+INFO	?	main	2016-12-05T13:50:27.768Z	org.javacs.JavaLanguageServer#doLint	Lint [c:\Users\dutta\Dropbox\Apps\Github\YourSQLBank\src\model\YourSQLBank.java]
+INFO	?	main	2016-12-05T13:50:27.783Z	org.javacs.JavaLanguageServer#doLint	Lint [c:\Users\dutta\Dropbox\Apps\Github\YourSQLBank\src\controller\AdminWindowController.java]

@@ -142,16 +142,16 @@ public class YourSQLBank {
 
     // ==== YourSQLBank Specific JDBC Query Methods ====
     public List<String[]> getAdminPanelUserInfoTable() {
-        return getTable("Admin Panel User Info Table", "USERNAME,CHECKING_BALANCE,SAVING_BALANCE",
-        "SELECT User_TB.USERNAME, CHECKINGACC.BALANCE AS CHECKING_BALANCE, SAVINGACC.BALANCE AS SAVING_BALANCE FROM User_TB JOIN Account_TB AS CHECKINGACC ON User_TB.USERNAME = CHECKINGACC.USERNAME AND CHECKINGACC.ACC_TYPE = 'CHKG' JOIN Account_TB AS SAVINGACC ON User_TB.USERNAME = SAVINGACC.USERNAME AND SAVINGACC.ACC_TYPE = 'SVNG' UNION SELECT User_TB.USERNAME, Archive_CHECKINGACC.BALANCE AS CHECKING_BALANCE, Archive_SAVINGACC.BALANCE AS SAVING_BALANCE FROM User_TB JOIN Account_TB_Archive AS Archive_CHECKINGACC ON User_TB.USERNAME = Archive_CHECKINGACC.USERNAME AND Archive_CHECKINGACC.ACC_TYPE = 'CHKG' JOIN Account_TB_Archive AS Archive_SAVINGACC ON User_TB.USERNAME = Archive_SAVINGACC.USERNAME AND Archive_SAVINGACC.ACC_TYPE = 'SVNG';", "Failed to Get Admin Panel User Info Table Data");
+        return getTable("Admin Panel User Info Table", "USERNAME,ACTIVE,CHECKING_BALANCE,SAVING_BALANCE",
+        "SELECT User_TB.USERNAME, ACTIVE, CHECKINGACC.BALANCE AS CHECKING_BALANCE, SAVINGACC.BALANCE AS SAVING_BALANCE FROM User_TB JOIN Account_TB AS CHECKINGACC ON User_TB.USERNAME = CHECKINGACC.USERNAME AND CHECKINGACC.ACC_TYPE = 'CHKG' JOIN Account_TB AS SAVINGACC ON User_TB.USERNAME = SAVINGACC.USERNAME AND SAVINGACC.ACC_TYPE = 'SVNG' UNION SELECT User_TB.USERNAME, ACTIVE, Archive_CHECKINGACC.BALANCE AS CHECKING_BALANCE, Archive_SAVINGACC.BALANCE AS SAVING_BALANCE FROM User_TB JOIN Account_TB_Archive AS Archive_CHECKINGACC ON User_TB.USERNAME = Archive_CHECKINGACC.USERNAME AND Archive_CHECKINGACC.ACC_TYPE = 'CHKG' JOIN Account_TB_Archive AS Archive_SAVINGACC ON User_TB.USERNAME = Archive_SAVINGACC.USERNAME AND Archive_SAVINGACC.ACC_TYPE = 'SVNG';", "Failed to Get Admin Panel User Info Table Data");
     }
 
     public List<String[]> getAdminPanelTransactionHistoryTable() {
-        return getTable("Admin Panel Transaction History Table", "TRSN_ID,ACC_ID,ACC_TYPE,TRSN_AMT,TRSN_TYPE", "SELECT TRSN_ID, Account_TB.ACC_ID, ACC_TYPE, TRSN_AMT, TRSN_TYPE FROM Account_TB JOIN History_TB ON Account_TB.USERNAME = History_TB.USERNAME AND Account_TB.ACC_ID = History_TB.ACC_ID UNION SELECT TRSN_ID, Account_TB_Archive.ACC_ID, ACC_TYPE, TRSN_AMT, TRSN_TYPE FROM Account_TB_Archive JOIN History_TB_Archive ON Account_TB_Archive.USERNAME = History_TB_Archive.USERNAME AND Account_TB_Archive.ACC_ID = History_TB_Archive.ACC_ID;", "Failed to Get Admin Panel User Info Table Data");
+        return getTable("Admin Panel Transaction History Table", "TRSN_ID,ACC_ID,ACC_TYPE,TRSN_TYPE,TRSN_AMT", "SELECT TRSN_ID, Account_TB.ACC_ID, ACC_TYPE, TRSN_TYPE, TRSN_AMT FROM Account_TB JOIN History_TB ON Account_TB.USERNAME = History_TB.USERNAME AND Account_TB.ACC_ID = History_TB.ACC_ID UNION SELECT TRSN_ID, Account_TB_Archive.ACC_ID, ACC_TYPE, TRSN_TYPE, TRSN_AMT FROM Account_TB_Archive JOIN History_TB_Archive ON Account_TB_Archive.USERNAME = History_TB_Archive.USERNAME AND Account_TB_Archive.ACC_ID = History_TB_Archive.ACC_ID;", "Failed to Get Admin Panel User Info Table Data");
     }
 
     public List<String[]> getUserTransactionHistoryTable(String username) {
-        return getTable("User "+username+"'s Transaction History", "TRSN_ID,ACC_ID,ACC_TYPE,TRSN_TYPE,TRSN_AMT", "SELECT TRSN_ID, Account_TB.ACC_ID, ACC_TYPE, TRSN_TYPE, TRSN_AMT FROM Account_TB JOIN History_TB ON Account_TB.USERNAME = History_TB.USERNAME AND Account_TB.ACC_ID = History_TB.ACC_ID JOIN User_TB ON User_TB.USERNAME = Account_TB.USERNAME WHERE User_TB.USERNAME = '"+username+"' UNION SELECT TRSN_ID, Account_TB_Archive.ACC_ID, ACC_TYPE, TRSN_AMT, TRSN_TYPE FROM Account_TB_Archive JOIN History_TB_Archive ON Account_TB_Archive.USERNAME = History_TB_Archive.USERNAME AND Account_TB_Archive.ACC_ID = History_TB_Archive.ACC_ID JOIN User_TB ON User_TB.USERNAME = Account_TB_Archive.USERNAME WHERE User_TB.USERNAME = '"+username+"';", "Failed to Get User Transaction History Table Data");
+        return getTable("User "+username+"'s Transaction History", "TRSN_ID,ACC_ID,ACC_TYPE,TRSN_TYPE,TRSN_AMT", "SELECT TRSN_ID, Account_TB.ACC_ID, ACC_TYPE, TRSN_TYPE, TRSN_AMT FROM Account_TB JOIN History_TB ON Account_TB.USERNAME = History_TB.USERNAME AND Account_TB.ACC_ID = History_TB.ACC_ID JOIN User_TB ON User_TB.USERNAME = Account_TB.USERNAME WHERE User_TB.USERNAME = '"+username+"' UNION SELECT TRSN_ID, Account_TB_Archive.ACC_ID, ACC_TYPE, TRSN_TYPE, TRSN_AMT FROM Account_TB_Archive JOIN History_TB_Archive ON Account_TB_Archive.USERNAME = History_TB_Archive.USERNAME AND Account_TB_Archive.ACC_ID = History_TB_Archive.ACC_ID JOIN User_TB ON User_TB.USERNAME = Account_TB_Archive.USERNAME WHERE User_TB.USERNAME = '"+username+"';", "Failed to Get User Transaction History Table Data");
     }
 
     public String[] login(String username, String pass) {
@@ -244,7 +244,7 @@ public class YourSQLBank {
         if(lst == null || lst.length < 1)
             return null;
         for(String s:lst)
-            temp += " " + s;
+            temp += "\t\t" + s;
         temp += "\n\n";
         return temp;
     }
@@ -266,7 +266,7 @@ public class YourSQLBank {
             return null;
         for(String[] row:rs) {
             for(String s:row)
-                temp += " " + s;
+                temp += "\t\t" + s;
             temp += "\n";
         }
         temp += "\n";
