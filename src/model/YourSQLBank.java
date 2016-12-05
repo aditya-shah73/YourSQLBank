@@ -1,7 +1,7 @@
 package model;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;;
+import java.util.List;
 
 //RUN IN CMD WITH: cd C:\Users\dutta\Dropbox\Apps\Github\YourSQLBank\src\model && cls && javac YourSQLBank.java && java -cp mysql-connector-java-5.1.40-bin.jar; YourSQLBank
 
@@ -10,7 +10,7 @@ public class YourSQLBank {
 
     // ==== Testing Code ====
     public static void main(String[] argv) {
-        YourSQLBank bankDB = new YourSQLBank("jdbc:mysql://localhost:3306/YourSQLBank_DB", "root", "mysqlrootpassword");
+        YourSQLBank bankDB = new YourSQLBank("jdbc:mysql://localhost:3306/YourSQLBank_DB", "root", "root");
         bankDB.test();
         //try {bankDB.test();} catch(Exception e) {handleError(e, "Failed testing... Check output below:");}
     }

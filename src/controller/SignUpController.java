@@ -15,7 +15,7 @@ public class SignUpController {
     @FXML private TextField newAccountUsername; //Stores input from GUI
     @FXML private TextField newAccountPassword; //Stores input from GUI
 
-    YourSQLBank db = new YourSQLBank("jdbc:mysql://localhost:3306/YourSQLBank_DB", "root", "mysqlrootpassword");
+    YourSQLBank db = new YourSQLBank("jdbc:mysql://localhost:3306/YourSQLBank_DB", "root", "root");
 
     /**
      * When Create Account Button is clicked, all the user information for the new account is taken from the textfields,

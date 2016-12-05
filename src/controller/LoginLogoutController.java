@@ -14,7 +14,7 @@ public class LoginLogoutController {
     @FXML private TextField loginPassword; // this stores password of the user that he/she inputs in the gui login window.
 
     public static String username_;
-    YourSQLBank db = new YourSQLBank("jdbc:mysql://localhost:3306/YourSQLBank_DB", "root", "mysqlrootpassword");
+    YourSQLBank db = new YourSQLBank("jdbc:mysql://localhost:3306/YourSQLBank_DB", "root", "root");
 
     /**
      * Takes in Username and password from gui, and shows appropriate account window.

@@ -36,7 +36,7 @@ public class UserWindowController {
 
     String loggedInUsername = LoginLogoutController.username_;
 
-    YourSQLBank db = new YourSQLBank("jdbc:mysql://localhost:3306/YourSQLBank_DB", "root", "mysqlrootpassword");
+    YourSQLBank db = new YourSQLBank("jdbc:mysql://localhost:3306/YourSQLBank_DB", "root", "root");
 
     /**
      * Constructor for AdminWindowController.
