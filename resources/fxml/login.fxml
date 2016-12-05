@@ -46,6 +46,9 @@
             fx:id="loginbutton"/>
         <!--The method that should handle loggin in should be placed in the LoginLogoutController class, and the method should be placed
             in the above onAction attribute, followed by # (replace method dummyLoginMethod()) -->
+    <Button text="Sign Up"
+            onAction="#showSignUpWindow"
+            fx:id="signupbutton"/>
 </VBox>
 
 <!--alignment="center" hgap="10" vgap="10" attributes in gridpane that control gap between cells.-->

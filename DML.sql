@@ -36,26 +36,3 @@ BEGIN
 	DELETE FROM History_TB WHERE TRSN_DATE <= Expected_Date;
 END//
 DELIMITER ;
-
--------------------------------------------------------------------------------------
-
---Need to Improve below
-------------------------
-
-LOAD DATA LOCAL INFILE './resources/synthetic/Codes.txt'
-INTO TABLE T_CODES
-FIELDS TERMINATED BY ','
-(CODE_KEY, CODE_TYPE, CODE_DESC)
-SET CODE_ID = NULL AND CREATED_ON = NULL;
-
-LOAD DATA LOCAL INFILE './resources/synthetic/Codes.txt'
-INTO TABLE T_CUSTOMER
-FIELDS TERMINATED BY ','
-(F_NAME, L_NAME, EMAIL, USERNAME, PASS)
-SET ACCOUNT_ID = NULL AND ADMIN = NULL AND ACTIVE = NULL AND CREATED_ON = NULL AND LAST_LOGIN_DATE = NULL;
-
-LOAD DATA LOCAL INFILE './resources/synthetic/Codes.txt'
-INTO TABLE T_ACCOUNT
-FIELDS TERMINATED BY ','
-(ACCOUNT_ID, ACCOUNT_TYPE)
-SET LAST_UPDATED = NULL AND AMOUNT = 0;

@@ -1,0 +1,10 @@
+aditya,SVNG,1000
+aditya,CHKG,300
+soham,SVNG,200
+soham,CHKG,300
+oindril,SVNG,100
+oindril,CHKG,700
+david,SVNG,100
+david,CHKG,1000
+peter,SVNG,800
+peter,CHKG,600

@@ -1,5 +1,4 @@
 package controller;
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
@@ -9,56 +8,59 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.YourSQLBank;
-
 import java.sql.ResultSet;
+import java.util.List;
 
-/**
- * Created by sohamshah on 11/27/16.
- */
 public class UserWindowController {
+    @FXML private StringProperty userName;
+    @FXML private StringProperty checkingAccountBalance;
+    @FXML private StringProperty savingAccountBalance;
+    @FXML private VBox mainWindow = new VBox();
+    @FXML private GridPane userTableHeader = new GridPane();
+    @FXML private Button depositCheckingButton = new Button();
+    @FXML private Button depositSavingButton = new Button();
+    @FXML private Button withdrawCheckingButton = new Button();
+    @FXML private Button withdrawSavingButton = new Button();
+    @FXML private TextField transactionAmount = new TextField();
 
-    @FXML private StringProperty userName; // stores the name of the admin for the greeting in gui.
+    @FXML private StringProperty transactionHistory;
+    // Add in Text Area for Transaction History
 
-    @FXML private TextField transactionAmount;
+    String loggedInUsername = LoginLogoutController.username_;
 
-    YourSQLBank yourSqlBankObject = new YourSQLBank("jdbc:mysql://localhost:3306/YourSQLBank_DB", "root", "mysqlrootpassword");
-
-    @FXML private Button depositCheckingButton;
-    @FXML private Button depositSavingButton;
-    @FXML private Button withdrawCheckingButton;
-    @FXML private Button withdrawSavingButton;
-
-    @FXML public StringProperty checkingAccountBalance;
-    @FXML public StringProperty savingAccountBalance;
-
+    YourSQLBank db = new YourSQLBank("jdbc:mysql://localhost:3306/YourSQLBank_DB", "root", "mysqlrootpassword");
 
     /**
      * Constructor for AdminWindowController.
      */
-    public UserWindowController(){
+    public UserWindowController() {
         userName = new SimpleStringProperty();
         checkingAccountBalance = new SimpleStringProperty();
         savingAccountBalance = new SimpleStringProperty();
+        transactionHistory = new SimpleStringProperty();
         //depositCheckingButton.setDisable(false);
-        try {
-            ResultSet rs = yourSqlBankObject.executeQueryStatement("SELECT * FROM User_TB WHERE USERNAME = '"+LoginLogoutController.username_+"';");
-            while(rs.next()) {
-                System.out.println(rs.getString("USERNAME"));
-            }
-            //query to get checking account balance
+        String[] data = db.getInfo(loggedInUsername);
+        setUserName(data[1]+" "+data[2]);
+        setcheckingAccountBalance(data[5]);
+        setSavingAccountBalance(data[6]);
 
-            //query to get saving account balance
-        } catch(Exception e) {
-            yourSqlBankObject.handleError(e, "Failed to Execute Query Statement! Check output below:");
+        setTransactionHistory(YourSQLBank.printS(db.getUserTransactionHistoryTable(loggedInUsername)));
 
-        }
 
-        setUserName(LoginLogoutController.username_);// Need a method that returns the name of admin as a string from db. which is found by the username entered while logging in.
-        //place the above line in th method that queries the database for the name of the admin by using username and password.
+        // showUserTableData(yourSqlBankObject.getUserTransactionHistoryTable(loggedInUsername));
+        System.out.println(YourSQLBank.printS(db.getUserTransactionHistoryTable(loggedInUsername)));
 
+
+        //if(data[4] == "0")
+           // doSomething("To disable all the buttons!");
     }
 
     /**
@@ -69,21 +71,22 @@ public class UserWindowController {
         return userName.get();
     }
 
-//    /**
-//     * To greet administrator with his/her name, passes the administrator name to fxml file.
-//     * @return Administrator's name that can be passed to fxml file.
-//     */
-//    public StringProperty userNameProperty() {
-//        return userName;
-//    }
-
     /**
      * Set's the username of the user for throwing it up on gui.
      * @param user_name name of the administrator.
      */
-    public void setUserName(String user_name){
+    public void setUserName(String user_name) {
         userName.set(user_name);
     }
+
+    public String getTransactionHistory(){
+        return transactionHistory.get();
+    }
+
+    public void setTransactionHistory(String transaction_history) {
+        transactionHistory.set(transaction_history);
+    }
+
     /**
      * Gets user's checking account balance.
      * @return checking account balance.
@@ -96,7 +99,7 @@ public class UserWindowController {
      * Set's the checking account balance of the user for throwing it up on gui.
      * @param checkingAccount_Balance of the user.
      */
-    public void setcheckingAccountBalance(String checkingAccount_Balance){
+    public void setcheckingAccountBalance(String checkingAccount_Balance) {
         checkingAccountBalance.set(checkingAccount_Balance);
     }
 
@@ -112,7 +115,7 @@ public class UserWindowController {
      * Set's the saving account balance of the user for throwing it up on gui.
      * @param savingAccount_Balance of the user.
      */
-    public void setSavingAccountBalance(String savingAccount_Balance){
+    public void setSavingAccountBalance(String savingAccount_Balance) {
         savingAccountBalance.set(savingAccount_Balance);
     }
 
@@ -122,49 +125,36 @@ public class UserWindowController {
      * @return double amount.
      */
     public double formattedAmount(TextField amount) {
-
-//        String amountS = amount.getText();
-//        double amountD = Double.parseDouble(amountS);
-//        return amountD;
-        return 0;
+        String amountS = amount.getText();
+        double amountD = Double.parseDouble(amountS);
+        return amountD;
     }
 
     /**
      * Deposites money in checking account
      */
-    public void depositMoneyInChecking(ActionEvent actionEvent) throws Exception{
-
-     //     double tAmount = formattedAmount(this.transactionAmount);
-        //query that makes transaction type to depositchecking.
-
-        //add a query that deposits tAmount in checking account, and updates balance.
-
+    public void depositMoneyInChecking(ActionEvent actionEvent) throws Exception {
+        createTransaction("DPST", formattedAmount(this.transactionAmount), "CHKG");
     }
 
-    public void depositMoneyInSaving() throws Exception{
-
-        double tAmount = formattedAmount(this.transactionAmount);
-        //query that makes transaction type to depositsaving
-
-        //add a query that deposits tAmount in saving account, and updates balance.
-
+    public void depositMoneyInSaving() throws Exception {
+        createTransaction("DPST", formattedAmount(this.transactionAmount), "SVNG");
     }
 
     public void withdrawFromChecking() throws Exception {
-
-        double tAmount = formattedAmount(this.transactionAmount);
-        //query that makes transaction type to withdrawchecking
-
-        //add a query that withdraws tAmount from checking account, and updates balance.
+        createTransaction("WTDW", formattedAmount(this.transactionAmount), "CHKG");
     }
 
     public void withdrawFromSaving() throws Exception {
+        createTransaction("WTDW", formattedAmount(this.transactionAmount), "SVNG");
+    }
 
-        double tAmount = formattedAmount(this.transactionAmount);
-        //query that makes transaction type to withdrawsaving.
-
-        //add a query that withdraws tAmount from saving account, and updates balance. and adds tDescription with it.
-
+    public void createTransaction(String transaction_type, double amount, String account_type) {
+        String[] data = db.getInfo(loggedInUsername);
+        if(data[4].contains("1"))
+            db.AddTransaction(loggedInUsername, "WTDW", formattedAmount(this.transactionAmount), "SVNG");
+        transactionAmount.clear();
+        System.out.println(data[4].contains("1"));
     }
 
     /**
@@ -179,4 +169,9 @@ public class UserWindowController {
         logOutStage.setScene(logoutPageScene);
         logOutStage.show();
     }
+
+    public void closeAccount(ActionEvent actionEvent) {
+        db.closeAccount(loggedInUsername);
+    }
 }
+

@@ -13,7 +13,10 @@ Admins are able to get a
 
 Users:
 
-1. Simply run the DDL.sql, DML.sql and the DCL.sql in that order to set up the database with synthetic data.
+1. Simply run the DDL.sql first, then DML.sql and lastly the DCL.sql in that order to set up the database with synthetic data.
+!!!! You might have to change the password
+
+2A. Intall IDEA community edition to run the GUI here:
 
 2. Run this line in the console:
 Put commandline argument here

@@ -9,6 +9,7 @@
 <?import javafx.scene.control.TextField?>
 
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.TextArea?>
 <VBox fx:controller="controller.AdminWindowController"
       xmlns:fx="http://javafx.com/fxml">
     <!-- path of the file that has controller logic for this fxml goes in the fx:controller="path" in above tag.-->
@@ -22,37 +23,8 @@
               text="${controller.adminName}"/>
     </HBox>
     <HBox>
-        <VBox>
-            <GridPane   fx:id="adminTableHeader"
-                    hgap="20"
-                    vgap="20">
-                <Text  styleClass="columnHeader"
-                    text="username"
-                    GridPane.rowIndex="0"
-                    GridPane.columnIndex="0"/>
-
-                <Text styleClass="columnHeader"
-                    text="Checking Balance"
-                    GridPane.rowIndex="0"
-                    GridPane.columnIndex="1"/>
-
-                <Text  styleClass="columnHeader"
-                    text="Saving Balance"
-                    GridPane.rowIndex="0"
-                    GridPane.columnIndex="2"/>
-
-                <Text  styleClass="columnHeader"
-                    text="Close Account"
-                    GridPane.rowIndex="0"
-                    GridPane.columnIndex="3"/>
-            </GridPane>
-
-            <GridPane fx:id="adminTableData">
-
-            </GridPane>
-        </VBox>
         <VBox   fx:id="createNewAccountPanel"
-                alignment="CENTER_RIGHT">
+                alignment="CENTER_LEFT">
             <Text   text="Create Account"/>
 
             <Label text="First Name: "/>
@@ -74,6 +46,22 @@
                     onAction="#createAccount"
                     GridPane.columnIndex="0"
                     GridPane.rowIndex="2"/>
+        </VBox>
+        <VBox   fx:id="closeAccountPanel"
+                alignment="TOP_LEFT">
+            <Text   text="Close Account"/>
+            <Label  text="Username"/>
+            <TextField  promptText="Usrname"
+                        fx:id="usernameCloseAccount"/>
+            <Button text="Close Account"
+                    onAction="#closeAccount"/>
+        </VBox>
+
+        <VBox>
+            <Text text="User Information"/>
+            <Text text="${controller.userInfo}"/>
+            <Text text="Transaction Information"/>
+            <Text text="${controller.transactionInfo}"/>
         </VBox>
     </HBox>
 

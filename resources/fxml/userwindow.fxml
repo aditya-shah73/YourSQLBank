@@ -9,8 +9,9 @@
 <?import javafx.scene.control.TextField?>
 
 <?import javafx.scene.layout.HBox?>
-<VBox fx:controller="controller.UserWindowController"
-      xmlns:fx="http://javafx.com/fxml">
+<VBox   fx:controller="controller.UserWindowController"
+        xmlns:fx="http://javafx.com/fxml"
+        fx:id="mainWindow">
     <!-- path of the file that has controller logic for this fxml goes in the fx:controller="path" in above tag.-->
 
     <Text fx:id="title"
@@ -33,16 +34,13 @@
     <VBox>
         <HBox>
             <TextField  promptText="Amount"
-                        fx:id="amountDeposite"/>
+                        fx:id="transactionAmount"/>
             <Button text="Deposit Checking Account"
                     onAction="#depositMoneyInChecking"
                     fx:id="depositCheckingButton"/>
             <Button text="Deposit Saving Account"
                     onAction="#depositMoneyInSaving"
                     fx:id="depositWithdrawButton"/>
-        </HBox>
-        <HBox>
-            <TextField  promptText="Amount"/>
             <Button text="Withdraw Checking Account"
                     onAction="#withdrawFromChecking"
                     fx:id="withdrawCheckingButton"/>
@@ -50,31 +48,20 @@
                     onAction="#withdrawFromSaving"
                     fx:id="withdrawSavingButton"/>
         </HBox>
+
     </VBox>
 
-    <GridPane   fx:id="userTableHeader"
-                hgap="10"
-                vgap="10">
-
-        <Text  styleClass="columnHeader"
-                    text="Transaction Type"
-                    GridPane.rowIndex="0"
-                    GridPane.columnIndex="0"/>
-
-        <Text  styleClass="columnHeader"
-                    text="Amount"
-                    GridPane.rowIndex="0"
-                    GridPane.columnIndex="1"/>
-    </GridPane>
-
-    <GridPane   fx:id="userTableData"
-                hgap="10"
-                vgap="10">
+    <VBox>
+        <Text text="Transaction History"/>
+        <Text text="${controller.transactionHistory}"/>
+    </VBox>
 
 
-    </GridPane>
 
     <Button text="Log Out"
             onAction="#showLogOutUserWindow"
             fx:id="logOutButton"/>
+    <Button text="Close Account"
+            onAction="#closeAccount"
+            fx:id="closeAccountButton"/>
 </VBox>
