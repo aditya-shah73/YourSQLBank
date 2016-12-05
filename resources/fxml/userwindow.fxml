@@ -18,19 +18,25 @@
     <HBox fx:id="greeting">
         <Text styleClass="userinfo"
               text="Hello, "/>
-
         <Text styleClass="userinfo"
               text="${controller.userName}"/>
+    </HBox>
+    <HBox   fx:id="checkingBalanceInfo">
+        <Text text="Your checking account balance is $"/>
+        <Text text="${controller.checkingAccountBalance}"/>
+    </HBox>
+    <HBox   fx:id="savingBalanceInfo">
+        <Text text="Your saving account balance is $"/>
+        <Text text="${controller.savingAccountBalance}"/>
     </HBox>
 
     <VBox>
         <HBox>
-            <TextField  promptText="transactionAmount"
+            <TextField  promptText="Amount"
                         fx:id="amountDeposite"/>
             <Button text="Deposit Checking Account"
                     onAction="#depositMoneyInChecking"
-                    fx:id="depositCheckingButton"
-                    disable="true"/>
+                    fx:id="depositCheckingButton"/>
             <Button text="Deposit Saving Account"
                     onAction="#depositMoneyInSaving"
                     fx:id="depositWithdrawButton"/>

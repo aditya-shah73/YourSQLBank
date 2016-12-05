@@ -24,22 +24,4 @@ SELECT * FROM History_TB_Archive;
 SELECT * FROM User_TB join Account_TB ON User_TB.USERNAME = Account_TB.USERNAME;
 SELECT * FROM User_TB JOIN Account_TB ON User_TB.USERNAME = Account_TB.USERNAME JOIN History_TB ON User_TB.USERNAME = History_TB.USERNAME;
 
-DROP TRIGGER IF EXISTS Account_Closing;
-DELIMITER //
-CREATE TRIGGER Account_Closing
-AFTER UPDATE ON User_TB
-FOR EACH ROW
-BEGIN
-IF New.Active = FALSE and Old.Active = TRUE THEN
-INSERT INTO Account_TB_Archive (SELECT * FROM Account_TB where Account_TB.USERNAME = NEW.USERNAME);
-DELETE FROM Account_TB where Account_TB.USERNAME = NEW.USERNAME;
-INSERT INTO History_TB_Archive (SELECT * FROM History_TB where History_TB.USERNAME = NEW.USERNAME);
-DELETE FROM History_TB where History_TB.USERNAME = NEW.USERNAME;
-END IF;
-END//
-DELIMITER ;
-
---==================================================================================================================================================
-
--- SELECT * FROM Account_TB WHERE Account_TB.USERNAME = "soham"; -- Soham is due to be closed
--- SELECT * FROM History_TB WHERE Account_TB.USERNAME = "soham"; -- Soham is due to be closed
+-------------------------------------------------------------------------------------

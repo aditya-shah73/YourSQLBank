@@ -19,8 +19,8 @@ public class YourSQLBank {
         // executeUpdateStatement("INSERT INTO t_customer VALUES (4, 1, 'duttaoindril@gmail.com', 'Oindril', 'Dutta', 'duttaoindril', 'odutta', 1, '2016-11-30 18:55:50', null)");
 
         //Testing Admin Level Table Calls
-        print("SELECT * FROM User_TB join Account_TB ON User_TB.USERNAME = Account_TB.USERNAME;");
-        print("SELECT * FROM User_TB JOIN Account_TB ON User_TB.USERNAME = Account_TB.USERNAME JOIN History_TB ON User_TB.USERNAME = History_TB.USERNAME;");
+        // print("SELECT * FROM User_TB join Account_TB ON User_TB.USERNAME = Account_TB.USERNAME;");
+        // print("SELECT * FROM User_TB JOIN Account_TB ON User_TB.USERNAME = Account_TB.USERNAME JOIN History_TB ON User_TB.USERNAME = History_TB.USERNAME;");
         print(getAdminPanelUserInfoTable());
         print(getAdminPanelTransactionHistoryTable());
         //Testing User Login Row Calls
@@ -36,19 +36,18 @@ public class YourSQLBank {
         print(getUserTransactionHistoryTable("soham"));
         print(getUserTransactionHistoryTable("FAIL"));
 
-        print("SELECT * FROM User_TB JOIN Account_TB ON User_TB.USERNAME = Account_TB.USERNAME JOIN History_TB ON User_TB.USERNAME = History_TB.USERNAME;");
-        print("SELECT * FROM User_TB JOIN Account_TB_Archive ON User_TB.USERNAME = Account_TB_Archive.USERNAME JOIN History_TB_Archive ON User_TB.USERNAME = History_TB_Archive.USERNAME;");
-        closeAccount("groot");
-        print("SELECT * FROM User_TB JOIN Account_TB ON User_TB.USERNAME = Account_TB.USERNAME JOIN History_TB ON User_TB.USERNAME = History_TB.USERNAME;");
-        print("SELECT * FROM User_TB JOIN Account_TB_Archive ON User_TB.USERNAME = Account_TB_Archive.USERNAME JOIN History_TB_Archive ON User_TB.USERNAME = History_TB_Archive.USERNAME;");
-
+        // print("SELECT * FROM User_TB JOIN Account_TB ON User_TB.USERNAME = Account_TB.USERNAME JOIN History_TB ON User_TB.USERNAME = History_TB.USERNAME;");
+        // print("SELECT * FROM User_TB JOIN Account_TB_Archive ON User_TB.USERNAME = Account_TB_Archive.USERNAME JOIN History_TB_Archive ON User_TB.USERNAME = History_TB_Archive.USERNAME;");
+        // closeAccount("groot");
+        // print("SELECT * FROM User_TB JOIN Account_TB ON User_TB.USERNAME = Account_TB.USERNAME JOIN History_TB ON User_TB.USERNAME = History_TB.USERNAME;");
+        // print("SELECT * FROM User_TB JOIN Account_TB_Archive ON User_TB.USERNAME = Account_TB_Archive.USERNAME JOIN History_TB_Archive ON User_TB.USERNAME = History_TB_Archive.USERNAME;");
 
         //Testing User Transaction History Insertion
         // print(getAdminPanelTransactionHistoryTable());
-        // AddTransaction("groot", "WTDW", 0, "CHKG");
-        // AddTransaction("groot", "DPST", 0, "SVNG");
-        // AddTransaction("soham", "WTDW", 0, "CHKG");
-        // AddTransaction("soham", "DPST", 0, "SVNG");
+        // AddTransaction("groot", "WTDW", 50, "CHKG");
+        // AddTransaction("groot", "DPST", 10, "SVNG");
+        // AddTransaction("soham", "WTDW", 5, "CHKG");
+        // AddTransaction("soham", "DPST", 10, "SVNG");
         // AddTransaction("FAIL", "WTDW", 0, "CHKG");
         // AddTransaction("FAIL", "DPST", 0, "SVNG");
         // print(getAdminPanelTransactionHistoryTable());
@@ -134,8 +133,9 @@ public class YourSQLBank {
     }
 
     // ==== YourSQLBank Specific JDBC Query Methods ====
-    public List<String[]> getAdminPanelUserInfoTable() { // Union in Archived Table Version
-        return getTable("Admin Panel User Info Table", "USERNAME,CHECKING_BALANCE,SAVING_BALANCE", "SELECT User_TB.USERNAME, CHECKINGACC.BALANCE AS CHECKING_BALANCE, SAVINGACC.BALANCE AS SAVING_BALANCE FROM User_TB JOIN Account_TB AS CHECKINGACC ON User_TB.USERNAME = CHECKINGACC.USERNAME AND CHECKINGACC.ACC_TYPE = 'CHKG' JOIN Account_TB AS SAVINGACC ON User_TB.USERNAME = SAVINGACC.USERNAME AND SAVINGACC.ACC_TYPE = 'SVNG';", "Failed to Get Admin Panel User Info Table Data");
+    public List<String[]> getAdminPanelUserInfoTable() {
+        return getTable("Admin Panel User Info Table", "USERNAME,CHECKING_BALANCE,SAVING_BALANCE",
+        "SELECT User_TB.USERNAME, CHECKINGACC.BALANCE AS CHECKING_BALANCE, SAVINGACC.BALANCE AS SAVING_BALANCE FROM User_TB JOIN Account_TB AS CHECKINGACC ON User_TB.USERNAME = CHECKINGACC.USERNAME AND CHECKINGACC.ACC_TYPE = 'CHKG' JOIN Account_TB AS SAVINGACC ON User_TB.USERNAME = SAVINGACC.USERNAME AND SAVINGACC.ACC_TYPE = 'SVNG' UNION SELECT User_TB.USERNAME, Archive_CHECKINGACC.BALANCE AS CHECKING_BALANCE, Archive_SAVINGACC.BALANCE AS SAVING_BALANCE FROM User_TB JOIN Account_TB_Archive AS Archive_CHECKINGACC ON User_TB.USERNAME = Archive_CHECKINGACC.USERNAME AND Archive_CHECKINGACC.ACC_TYPE = 'CHKG' JOIN Account_TB_Archive AS Archive_SAVINGACC ON User_TB.USERNAME = Archive_SAVINGACC.USERNAME AND Archive_SAVINGACC.ACC_TYPE = 'SVNG';", "Failed to Get Admin Panel User Info Table Data");
     }
 
     public List<String[]> getAdminPanelTransactionHistoryTable() { // Union in Archived Table Version
@@ -157,7 +157,7 @@ public class YourSQLBank {
     // ==== YourSQLBank Specific JDBC Update Methods ====
     public void AddTransaction(String username, String trsn_type, double amt, int acc_id) {
         //trsn_type can be WTDW for Withdraw and DPST for Deposit
-        executeUpdateStatement("INSERT INTO History_TB (TRSN_TYPE, TRSN_AMT, USERNAME, ACC_ID) VALUES ('"+trsn_type+"', "+amt+", '"+username+"', "+acc_id+")", "");
+        executeUpdateStatement("INSERT INTO History_TB (TRSN_TYPE, TRSN_AMT, USERNAME, ACC_ID) VALUES ('"+trsn_type+"', "+amt+", '"+username+"', "+acc_id+")", "Could not Insert Transaction");
     }
 
     public void AddTransaction(String username, String trsn_type, double amt, String acc_type) {

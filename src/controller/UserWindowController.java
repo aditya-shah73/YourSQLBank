@@ -31,6 +31,8 @@ public class UserWindowController {
     @FXML private Button withdrawCheckingButton;
     @FXML private Button withdrawSavingButton;
 
+    @FXML public StringProperty checkingAccountBalance;
+    @FXML public StringProperty savingAccountBalance;
 
 
     /**
@@ -38,13 +40,17 @@ public class UserWindowController {
      */
     public UserWindowController(){
         userName = new SimpleStringProperty();
+        checkingAccountBalance = new SimpleStringProperty();
+        savingAccountBalance = new SimpleStringProperty();
         //depositCheckingButton.setDisable(false);
         try {
             ResultSet rs = yourSqlBankObject.executeQueryStatement("SELECT * FROM User_TB WHERE USERNAME = '"+LoginLogoutController.username_+"';");
             while(rs.next()) {
                 System.out.println(rs.getString("USERNAME"));
             }
+            //query to get checking account balance
 
+            //query to get saving account balance
         } catch(Exception e) {
             yourSqlBankObject.handleError(e, "Failed to Execute Query Statement! Check output below:");
 
@@ -55,32 +61,60 @@ public class UserWindowController {
 
     }
 
-
-
     /**
-     * Gets administrator's name.
-     * @return Administrator's name.
+     * Gets user's username.
+     * @return user's username.
      */
     public String getUserName() {
         return userName.get();
     }
 
-    /**
-     * To greet administrator with his/her name, passes the administrator name to fxml file.
-     * @return Administrator's name that can be passed to fxml file.
-     */
-    public StringProperty userNameProperty() {
-        return userName;
-    }
+//    /**
+//     * To greet administrator with his/her name, passes the administrator name to fxml file.
+//     * @return Administrator's name that can be passed to fxml file.
+//     */
+//    public StringProperty userNameProperty() {
+//        return userName;
+//    }
 
     /**
-     * Set's the name of the administrator for throwing it up on gui.
+     * Set's the username of the user for throwing it up on gui.
      * @param user_name name of the administrator.
      */
     public void setUserName(String user_name){
         userName.set(user_name);
     }
+    /**
+     * Gets user's checking account balance.
+     * @return checking account balance.
+     */
+    public String getCheckingAccountBalance() {
+        return checkingAccountBalance.get();
+    }
 
+    /**
+     * Set's the checking account balance of the user for throwing it up on gui.
+     * @param checkingAccount_Balance of the user.
+     */
+    public void setcheckingAccountBalance(String checkingAccount_Balance){
+        checkingAccountBalance.set(checkingAccount_Balance);
+    }
+
+    /**
+     * Gets user's saving account balance.
+     * @return saving account balance.
+     */
+    public String getSavingAccountBalance() {
+        return savingAccountBalance.get();
+    }
+
+    /**
+     * Set's the saving account balance of the user for throwing it up on gui.
+     * @param savingAccount_Balance of the user.
+     */
+    public void setSavingAccountBalance(String savingAccount_Balance){
+        savingAccountBalance.set(savingAccount_Balance);
+    }
 
     /**
      * Takes in transaction amount from gui, and converts it to a double value
