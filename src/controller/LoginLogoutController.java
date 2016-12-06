@@ -10,16 +10,12 @@ import javafx.stage.Stage;
 import model.YourSQLBank;
 
 public class LoginLogoutController {
-    @FXML private TextField loginUsername; // this stores username of the user that he/she inputs in the gui login window.
-    @FXML private TextField loginPassword; // this stores password of the user that he/she inputs in the gui login window.
+    @FXML private TextField loginUsername;
+    @FXML private TextField loginPassword;
 
     public static String username_;
-    YourSQLBank db = new YourSQLBank("jdbc:mysql://localhost:3306/YourSQLBank_DB", "root", "root");
+    public static YourSQLBank db = new YourSQLBank("jdbc:mysql://localhost:3306/YourSQLBank_DB", "root", "root");
 
-    /**
-     * Takes in Username and password from gui, and shows appropriate account window.
-     * @param actionEvent
-     */
     public void showLoggedInWindow(ActionEvent actionEvent) throws Exception {
         String userType = checkUserInfoInDb(loginUsername.getText(), loginPassword.getText());
         if(userType == null)
@@ -31,11 +27,6 @@ public class LoginLogoutController {
         stage.show();
     }
 
-    /**
-     * Takes UserInput from login window namely, username and password, and checks for existence of the user in the db.
-     * if the user exists, the method returns "admin" or "user".
-     * @return "admin" or "user"
-     */
     public String checkUserInfoInDb(String uName, String pWord) {
         String[] data = db.login(uName, pWord);
         if(data == null)

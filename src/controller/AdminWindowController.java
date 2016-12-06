@@ -18,12 +18,13 @@ public class AdminWindowController {
     @FXML private TextField newAccountPassword;
     @FXML private TextField newAccountInitialBalance;
     @FXML private TextField usernameCloseAccount;
-
     @FXML private StringProperty adminName;
     @FXML private StringProperty userInfo;
     @FXML private StringProperty transactionInfo;
-    String loggedInUsername = LoginLogoutController.username_;
-    YourSQLBank db = new YourSQLBank("jdbc:mysql://localhost:3306/YourSQLBank_DB", "root", "root");
+
+    private String loggedInUsername = LoginLogoutController.username_;
+    private YourSQLBank db = LoginLogoutController.db;
+    //YourSQLBank db = new YourSQLBank("jdbc:mysql://localhost:3306/YourSQLBank_DB", "root", "root");
 
     public AdminWindowController() {
         adminName = new SimpleStringProperty();

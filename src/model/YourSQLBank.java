@@ -12,25 +12,14 @@ public class YourSQLBank {
     public static void main(String[] argv) {
         YourSQLBank bankDB = new YourSQLBank("jdbc:mysql://localhost:3306/YourSQLBank_DB", "root", "root");
         bankDB.test();
-        //try {bankDB.test();} catch(Exception e) {handleError(e, "Failed testing... Check output below:");}
     }
 
-    //Make More Detailed Status Reports
-    //Enable Constraints in Withdraw & Deposit
-    //AutoUpdate Whenever Changes Occur
-    //Write ReadMe
-
-    public void test() {
-        //Testing Admin Level Table Calls
+    private void test() {
         // print("SELECT * FROM User_TB join Account_TB ON User_TB.USERNAME = Account_TB.USERNAME;");
         // print("SELECT * FROM User_TB JOIN Account_TB ON User_TB.USERNAME = Account_TB.USERNAME JOIN History_TB ON User_TB.USERNAME = History_TB.USERNAME;");
-
+        //Testing Admin Level Table Calls
         print(getAdminPanelUserInfoTable());
         print(getAdminPanelTransactionHistoryTable());
-
-        System.out.print(printS(getAdminPanelUserInfoTable()));
-        System.out.print(printS(getAdminPanelTransactionHistoryTable()));
-
         //Testing User Login Row Calls
         print(login("groot", "groot"));
         print(login("soham", "pass"));

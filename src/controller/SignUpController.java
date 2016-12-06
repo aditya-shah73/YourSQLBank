@@ -10,18 +10,13 @@ import javafx.stage.Stage;
 import model.YourSQLBank;
 
 public class SignUpController {
-    @FXML private TextField newAccountFirstName; //Stores input from GUI
-    @FXML private TextField newAccountLastName; //Stores input from GUI
-    @FXML private TextField newAccountUsername; //Stores input from GUI
-    @FXML private TextField newAccountPassword; //Stores input from GUI
+    @FXML private TextField newAccountFirstName;
+    @FXML private TextField newAccountLastName;
+    @FXML private TextField newAccountUsername;
+    @FXML private TextField newAccountPassword;
 
-    YourSQLBank db = new YourSQLBank("jdbc:mysql://localhost:3306/YourSQLBank_DB", "root", "root");
+    YourSQLBank db = LoginLogoutController.db;
 
-    /**
-     * When Create Account Button is clicked, all the user information for the new account is taken from the textfields,
-     * and after correcting the formats, stored in the global variables, which are ready to be placed in the db.
-     * @throws Exception
-     */
     public void signUpAccount(ActionEvent actionEvent) throws Exception {
         LoginLogoutController.username_ = newAccountUsername.getText();
         db.signUp(newAccountUsername.getText(), false, newAccountFirstName.getText(), newAccountLastName.getText(), newAccountPassword.getText(), 0.0);

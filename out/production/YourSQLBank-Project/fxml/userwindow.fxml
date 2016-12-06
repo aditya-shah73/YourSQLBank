@@ -35,7 +35,7 @@
                     fx:id="depositCheckingButton"/>
             <Button text="Deposit Saving Account"
                     onAction="#depositMoneyInSaving"
-                    fx:id="depositWithdrawButton"/>
+                    fx:id="depositSavingButton"/>
             <Button text="Withdraw Checking Account"
                     onAction="#withdrawFromChecking"
                     fx:id="withdrawCheckingButton"/>

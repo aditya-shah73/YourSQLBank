@@ -26,14 +26,15 @@ public class UserWindowController {
     @FXML private Button depositSavingButton = new Button();
     @FXML private Button withdrawCheckingButton = new Button();
     @FXML private Button withdrawSavingButton = new Button();
+    @FXML private Button closeAccountButton = new Button();
     @FXML private TextField transactionAmount = new TextField();
-
     @FXML private StringProperty userName;
     @FXML private StringProperty checkingAccountBalance;
     @FXML private StringProperty savingAccountBalance;
     @FXML private StringProperty transactionHistory;
+
     String loggedInUsername = LoginLogoutController.username_;
-    YourSQLBank db = new YourSQLBank("jdbc:mysql://localhost:3306/YourSQLBank_DB", "root", "root");
+    YourSQLBank db = LoginLogoutController.db;
 
     public UserWindowController() {
         userName = new SimpleStringProperty();
@@ -44,14 +45,22 @@ public class UserWindowController {
     }
 
     public void updateGui() {
-        System.out.println("Updating Gui...");
         String[] data = db.getInfo(loggedInUsername);
-        setUserName(data[1]+" "+data[2]);
+        boolean accountOpen = true;
+        if(data[4].contains("0")) {
+            accountOpen = false;
+            System.out.println("Your account is closed. You cannot make any transactions.");
+        }
+        setUserName(data[1]+" "+data[2]+" | Your account is "+(accountOpen? "Open." : "Closed."));
         setcheckingAccountBalance(data[5]);
         setSavingAccountBalance(data[6]);
         setTransactionHistory("\n\tTRSN_ID\tACC_ID\tACC_TYPE\tTRSN_TYPE\tTRSN_AMT\n"+YourSQLBank.printS(db.getUserTransactionHistoryTable(loggedInUsername)));
-        //if(data[4].contains("1"))
-           // doSomething("To disable all the buttons!");
+        depositCheckingButton.setDisable(!accountOpen);
+        depositSavingButton.setDisable(!accountOpen);
+        withdrawCheckingButton.setDisable(!accountOpen);
+        withdrawSavingButton.setDisable(!accountOpen);
+        closeAccountButton.setDisable(!accountOpen);
+        transactionAmount.setDisable(!accountOpen);
     }
 
     public String getUserName() {
@@ -104,6 +113,8 @@ public class UserWindowController {
 
     public double formattedAmount(TextField amount) {
         String amountS = amount.getText();
+        if(amountS.length() == 0)
+            return 0;
         double amountD = Double.parseDouble(amountS);
         return amountD;
     }
@@ -126,14 +137,17 @@ public class UserWindowController {
 
     public void createTransaction(String transaction_type, double amount, String account_type) {
         String[] data = db.getInfo(loggedInUsername);
-        if(data[4].contains("1") && safeTransaction(loggedInUsername, transaction_type, amount, account_type, data))
+        if(data[4].contains("1") && safeTransaction(transaction_type, amount, account_type, data))
             db.AddTransaction(loggedInUsername, transaction_type, amount, account_type);
         transactionAmount.clear();
         updateGui();
     }
 
-    public boolean safeTransaction(String loggedInUsername, String transaction_type, double amount, String account_type, String[] data) {
-        //Implement Checking System...
+    public boolean safeTransaction(String transaction_type, double amount, String account_type, String[] data) {
+        if(transaction_type == "WTDW" && amount > ((account_type == "CHKG")? Double.parseDouble(data[5]) : Double.parseDouble(data[6]))) {
+            System.out.println("You cannot withdraw from account if you don't have the money...\n");
+            return false;
+        }
         return true;
     }
 
