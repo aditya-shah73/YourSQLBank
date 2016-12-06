@@ -154,7 +154,7 @@ public class YourSQLBank {
     // ==== YourSQLBank Specific JDBC Update Methods ====
     public void AddTransaction(String username, String trsn_type, double amt, int acc_id) {
         //trsn_type can be WTDW for Withdraw and DPST for Deposit
-        executeUpdateStatement("INSERT INTO History_TB (TRSN_TYPE, TRSN_AMT, USERNAME, ACC_ID) VALUES ('"+trsn_type+"', "+amt+", '"+username+"', "+acc_id+")", "Could not Insert Transaction");
+        executeUpdateStatement("INSERT INTO History_TB (TRSN_TYPE, TRSN_AMT, USERNAME, ACC_ID) VALUES ('"+trsn_type+"', "+amt+", '"+username+"', "+acc_id+");", "Could not Insert Transaction");
     }
 
     public void AddTransaction(String username, String trsn_type, double amt, String acc_type) {
