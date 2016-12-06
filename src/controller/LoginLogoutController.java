@@ -58,4 +58,14 @@ public class LoginLogoutController {
         signUpStage.setScene(signUpPageScene);
         signUpStage.show();
     }
+
+    public void showQuitLoginLogoutWindow(ActionEvent actionEvent) throws Exception {
+        Parent logoutPageParent = FXMLLoader.load(getClass().getResource("/fxml/goodbye.fxml"));
+        Scene logoutPageScene = new Scene(logoutPageParent, 1000, 500);
+        Stage logOutStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        logOutStage.setScene(logoutPageScene);
+        logOutStage.show();
+        Thread.sleep(2000);
+        System.exit(0);
+    }
 }

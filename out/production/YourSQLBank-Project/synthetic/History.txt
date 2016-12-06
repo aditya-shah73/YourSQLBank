@@ -1,0 +1,10 @@
+WTDW,20,aditya,1
+DPST,200,aditya,2
+WTDW,30,soham,3
+DPST,300,soham,4
+WTDW,50,oindril,5
+DPST,60,oindril,6
+WTDW,70,david,7
+DPST,80,david,8
+WTDW,90,peter,9
+DPST,20,peter,10
