@@ -10,15 +10,10 @@ Made By Oindril Dutta, Aditya Shah, Soham Shah
 This project implements a Banking System GUI that allows two types of users: Normal Users and Admins
 
 Simply run the DDL.sql first, then DML.sql and lastly the DCL.sql in that order to set up the database with synthetic data.
-Install IntelliJ Idea Community Edition to run the JavaFX GUI. Open the project and change the default root password to the systems root password.
+Install IntelliJ Idea Community Edition to run the JavaFX GUI. Open the project and change the default root password to the systems root password in the LoginLogoutController.java file in the src/controller folder.
+The project can also be cloned from GitHub: https://github.com/aditya7395/YourSQLBank
 
 Now click on the run button!
-
--- Side Note --
-
-If you want to run it without IntelliJ Idea, then follow these steps:
-
--- End Side Note --
 
 After it has been run Successfully, you should see the following message:
 
