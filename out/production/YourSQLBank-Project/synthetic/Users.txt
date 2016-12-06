@@ -1,5 +1,0 @@
-aditya,1,2,1,1,Aditya,Shah,pass
-soham,3,4,1,1,Soham,Shah,pass
-oindril,5,6,0,1,Oindril,Dutta,pass
-david,7,8,0,1,David,Pham,pass
-peter,9,10,0,1,Peter,Parker,pass
