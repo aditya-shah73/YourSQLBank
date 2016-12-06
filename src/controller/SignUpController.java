@@ -18,6 +18,10 @@ public class SignUpController {
     YourSQLBank db = LoginLogoutController.db;
 
     public void signUpAccount(ActionEvent actionEvent) throws Exception {
+        if(newAccountUsername.getText().equals("") || newAccountFirstName.getText().equals("") || newAccountLastName.getText().equals("") || newAccountPassword.getText().equals("") || db.getInfo(newAccountUsername.getText()) != null) {
+            LoginLogoutController.displayAlert(actionEvent, "Please Enter Information | Account already Exists", "Please enter details to fill this account with. | An account with this username already Exists.", "Please Try Again.");
+            return;
+        }
         LoginLogoutController.username_ = newAccountUsername.getText();
         db.signUp(newAccountUsername.getText(), false, newAccountFirstName.getText(), newAccountLastName.getText(), newAccountPassword.getText(), 0.0);
         Parent pageParent = FXMLLoader.load(getClass().getResource("/fxml/userwindow.fxml"));

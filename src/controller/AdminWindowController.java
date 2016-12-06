@@ -24,7 +24,6 @@ public class AdminWindowController {
 
     private String loggedInUsername = LoginLogoutController.username_;
     private YourSQLBank db = LoginLogoutController.db;
-    //YourSQLBank db = new YourSQLBank("jdbc:mysql://localhost:3306/YourSQLBank_DB", "root", "root");
 
     public AdminWindowController() {
         adminName = new SimpleStringProperty();
@@ -77,6 +76,11 @@ public class AdminWindowController {
     }
 
     public void createAccount(ActionEvent actionEvent) throws Exception {
+        if(newAccountUsername.getText().equals("") || newAccountFirstName.getText().equals("") || newAccountLastName.getText().equals("") || newAccountPassword.getText().equals("")
+        || UserWindowController.formattedAmount(newAccountInitialBalance.getText(), actionEvent) > 0 || (db.getInfo(newAccountUsername.getText()) != null)) {
+            LoginLogoutController.displayAlert(actionEvent, "Please Enter Information | Account already Exists", "Please enter details to fill this account with. | An account with this username already Exists.", "Please Try Again.");
+            return;
+        }
         db.signUp(newAccountUsername.getText(), false, newAccountFirstName.getText(), newAccountLastName.getText(), newAccountPassword.getText(), Double.parseDouble(newAccountInitialBalance.getText()));
         newAccountUsername.clear();
         newAccountFirstName.clear();
@@ -87,6 +91,10 @@ public class AdminWindowController {
     }
 
     public void closeAccount(ActionEvent actionEvent) {
+        if(this.usernameCloseAccount.getText().equals("") || db.getInfo(this.usernameCloseAccount.getText())[4].contains("0")) {
+            LoginLogoutController.displayAlert(actionEvent, "Account Closed", "The account with this username is already closed.", "Please Try Again.");
+            return;
+        }
         db.closeAccount(this.usernameCloseAccount.getText());
         usernameCloseAccount.clear();
         updateGui();

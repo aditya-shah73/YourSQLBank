@@ -51,7 +51,7 @@ public class UserWindowController {
             accountOpen = false;
             System.out.println("Your account is closed. You cannot make any transactions.");
         }
-        setUserName(data[1]+" "+data[2]+" | Your account is "+(accountOpen? "Open." : "Closed."));
+        setUserName(data[1]+" "+data[2]+" | Your account is now "+(accountOpen? "open." : "closed."));
         setcheckingAccountBalance(data[5]);
         setSavingAccountBalance(data[6]);
         setTransactionHistory("\n\tTRSN_ID\tACC_ID\tACC_TYPE\tTRSN_TYPE\tTRSN_AMT\n"+YourSQLBank.printS(db.getUserTransactionHistoryTable(loggedInUsername)));
@@ -111,40 +111,52 @@ public class UserWindowController {
         savingAccountBalance.set(savingAccount_Balance);
     }
 
-    public double formattedAmount(TextField amount) {
-        String amountS = amount.getText();
-        if(amountS.length() == 0)
-            return 0;
-        double amountD = Double.parseDouble(amountS);
-        return amountD;
+    public static double formattedAmount(String amount, ActionEvent e) throws Exception {
+        double amt;
+        try {
+            amt = Double.parseDouble(amount);
+            if(amt < 0)
+                throw new NumberFormatException();
+        } catch(NumberFormatException ex) {
+            LoginLogoutController.displayAlert(e, "Invalid Number Entered", "Please try a proper positive numeric entry.", "Please Try Again.");
+            throw new Exception();
+        }
+        return amt;
+    }
+
+    public static double formattedAmount(TextField amount, ActionEvent e) throws Exception {
+        String num = amount.getText();
+        amount.clear();
+        return formattedAmount(num, e);
     }
 
     public void depositMoneyInChecking(ActionEvent actionEvent) throws Exception {
-        createTransaction("DPST", formattedAmount(this.transactionAmount), "CHKG");
+        createTransaction("DPST", formattedAmount(this.transactionAmount, actionEvent), "CHKG", actionEvent);
     }
 
-    public void depositMoneyInSaving() throws Exception {
-        createTransaction("DPST", formattedAmount(this.transactionAmount), "SVNG");
+    public void depositMoneyInSaving(ActionEvent actionEvent) throws Exception {
+        createTransaction("DPST", formattedAmount(this.transactionAmount, actionEvent), "SVNG", actionEvent);
     }
 
-    public void withdrawFromChecking() throws Exception {
-        createTransaction("WTDW", formattedAmount(this.transactionAmount), "CHKG");
+    public void withdrawFromChecking(ActionEvent actionEvent) throws Exception {
+        createTransaction("WTDW", formattedAmount(this.transactionAmount, actionEvent), "CHKG", actionEvent);
     }
 
-    public void withdrawFromSaving() throws Exception {
-        createTransaction("WTDW", formattedAmount(this.transactionAmount), "SVNG");
+    public void withdrawFromSaving(ActionEvent actionEvent) throws Exception {
+        createTransaction("WTDW", formattedAmount(this.transactionAmount, actionEvent), "SVNG", actionEvent);
     }
 
-    public void createTransaction(String transaction_type, double amount, String account_type) {
-        String[] data = db.getInfo(loggedInUsername);
-        if(data[4].contains("1") && safeTransaction(transaction_type, amount, account_type, data))
-            db.AddTransaction(loggedInUsername, transaction_type, amount, account_type);
+    public void createTransaction(String transaction_type, double amount, String account_type, ActionEvent e) {
         transactionAmount.clear();
+        String[] data = db.getInfo(loggedInUsername);
+        if(data[4].contains("1") && safeTransaction(transaction_type, amount, account_type, data, e))
+            db.AddTransaction(loggedInUsername, transaction_type, amount, account_type);
         updateGui();
     }
 
-    public boolean safeTransaction(String transaction_type, double amount, String account_type, String[] data) {
-        if(transaction_type == "WTDW" && amount > ((account_type == "CHKG")? Double.parseDouble(data[5]) : Double.parseDouble(data[6]))) {
+    public boolean safeTransaction(String transaction_type, double amount, String account_type, String[] data, ActionEvent e) {
+        if(transaction_type.equals("WTDW") && amount > ((account_type.equals("CHKG"))? Double.parseDouble(data[5]) : Double.parseDouble(data[6]))) {
+            LoginLogoutController.displayAlert(e, "Not Enough Money", "There isn't enough money in your account to withdraw $"+amount+".", "You cannot withdraw from account if you don't have the money.\n\nPlease Try Again.");
             System.out.println("You cannot withdraw from account if you don't have the money...\n");
             return false;
         }
