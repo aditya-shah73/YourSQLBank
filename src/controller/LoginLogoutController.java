@@ -66,6 +66,6 @@ public class LoginLogoutController {
         logOutStage.setScene(logoutPageScene);
         logOutStage.show();
         Thread.sleep(2000);
-        System.exit(0);
+        System.exit(0);kkk
     }
 }
